@@ -1,8 +1,11 @@
-# bfs (Basic Flask Setup)
+# template-flask
+
+pip install template-flask
+
 
 from the command line navigate to the directory where you would like to keep your project
 
-type "python -m bfs" and click enter
+type "python -m template-flask" and click enter
 
 enter the name of your project
 
