@@ -1,6 +1,6 @@
 # template-flask
 
-pip install template-flask
+pip install template_flask
 
 
 from the command line navigate to the directory where you would like to keep your project
@@ -10,6 +10,7 @@ type "python -m template-flask" and click enter
 enter the name of your project
 
 once completed you will have a basic flask directory structure setup and a virtual environment with these packages installed within it...
+
 atomicwrites
 attrs
 blinker
