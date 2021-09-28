@@ -34,7 +34,7 @@ def create_dir_and_venv(project_name: str, project_directory: str):
     venv_path = os.path.join(full_path, 'venv')
     venv.create(venv_path, with_pip=True)
 
-    package_path = os.path.join(full_path, 'project')
+    package_path = os.path.join(full_path, f'{project_name}_app')
     static_path = os.path.join(package_path, 'static')
     templates_path = os.path.join(package_path, 'templates')
     index_path = os.path.join(templates_path, 'index.html')
@@ -65,6 +65,7 @@ def activate_venv_and_install_reqs(project_name: str, project_directory: str):
     os.chdir(full_path)
     cmd1 = f'{v} & pip install {" ".join(REQUIREMENTS)} & deactivate'
     subprocess.check_output(cmd1, shell=True)
+    print()
 
     cmd2 = f'{v} & pip freeze & deactivate'
     reqs = [x.decode('utf-8') for x in subprocess.check_output(cmd2, shell=True).splitlines()]

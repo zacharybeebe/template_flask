@@ -29,7 +29,7 @@ CONFIG = {
 
 ROUTE = {
     1: ["from flask import render_template, redirect, url_for, session, flash", False],
-    2: ["from {fill}.project import app", True],
+    2: ["from {fill}_app import app", True],
     3: ["", False],
     4: ["@app.route('/')", False],
     5: ["@app.route('/home')", False],
@@ -39,14 +39,14 @@ ROUTE = {
 
 MODEL = {
     1: ["from datetime import datetime", False],
-    2: ["from {fill}.project import db", True],
+    2: ["from {fill}_app import db", True],
     3: ["", False],
     4: ["class Model(db.Model):", False],
     5: ["\tid = db.Column(db.Integer, primary_key=True)", False]
 }
 
 RUN = {
-    1: ["from {fill}.project import app", True],
+    1: ["from {fill}_app import app", True],
     2: ["", False],
     3: ["if __name__ == '__main__':", False],
     4: ["\tapp.run(debug=True)", False]
@@ -55,22 +55,22 @@ RUN = {
 INIT = {
     1: ["from flask import Flask", False],
     2: ["from flask_sqlalchemy import SQLAlchemy", False],
-    3: ["from flask_login import ()", False],
-    4: ["from flask_mail import ()", False],
-    5: ["from flask_wft import ()", False],
-    6: ["from flask_debugtoolbar import ()", False],
-    7: ["from {fill}.project.config import *", True],
+    3: ["# from flask_login import ()", False],
+    4: ["# from flask_mail import ()", False],
+    5: ["# from flask_wft import ()", False],
+    6: ["# from flask_debugtoolbar import ()", False],
+    7: ["from {fill}_app.config import *", True],
     8: ["", False],
     9: ["app = Flask(__name__)", False],
     10: ["app.config['SECRET_KEY'] = SECRET_KEY", False],
     11: ["app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI", False],
-    12: ["app.config[''] = ''", False],
-    13: ["app.config[''] = ''", False],
-    14: ["app.config[''] = ''", False],
-    15: ["app.config[''] = ''", False],
+    12: ["# app.config[''] = ''", False],
+    13: ["# app.config[''] = ''", False],
+    14: ["# app.config[''] = ''", False],
+    15: ["# app.config[''] = ''", False],
     16: ["", False],
     17: ["db = SQLAlchemy(app)", False],
     18: ["", False],
-    19: ["from {fill}.project import routes", True]
+    19: ["from {fill}_app import routes", True]
 }
 
