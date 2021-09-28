@@ -41,7 +41,7 @@ def create_dir_and_venv(project_name: str, project_directory: str):
     config_path = os.path.join(package_path, 'config.py')
     routes_path = os.path.join(package_path, 'routes.py')
     models_path = os.path.join(package_path, 'models.py')
-    run_path = os.path.join(package_path, 'routes.py')
+    run_path = os.path.join(package_path, 'run.py')
     init_path = os.path.join(package_path, '__init__.py')
 
     os.mkdir(package_path)
