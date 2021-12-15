@@ -13,6 +13,5 @@ if __name__ == '__main__':
 
     activate_venv_and_install_reqs(p_name, p_path)
 
-    print('Completed setup')
-    print('Exiting...')
+    print('Successfully Completed Setup')
     sleep(1)
