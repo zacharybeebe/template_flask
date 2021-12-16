@@ -5,7 +5,7 @@ pip install template_flask
 
 from the command line navigate to the directory where you would like to keep your project
 
-type "python -m template-flask" and click enter
+type "python -m template_flask" and click enter
 
 enter the name of your project
 
@@ -42,6 +42,11 @@ Werkzeug
 WTForms
 zipp
 
-		
+
+Within the templates and static folders that are created, you will find HTML, CSS, and JS for various Bootstrap 5 example
+if you would like to use them in your project.
+
+To preview the live Bootstrap pages, run the newly created "run.py" file from within your new project directory, open to
+the index page and click through the buttons.
 
 

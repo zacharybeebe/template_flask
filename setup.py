@@ -8,13 +8,13 @@ with open("README.txt", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='template_flask',
-    version="0.0.4",
+    version="1.0",
     author='Zach Beebe',
     author_email='z.beebe@yahoo.com',
-    description='Python module for creating a template flask app structure and virtual environment',
+    description='Python module for creating a template flask app structure and virtual environment, along with Bootstrap examples',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='https://github.com/zacharybeebe/basic_flask_setup',
+    url='https://github.com/zacharybeebe/template_flask',
     license='MIT',
     packages=setuptools.find_packages(),
     classifiers=[
@@ -25,5 +25,6 @@ setuptools.setup(
         "Operating System :: OS Independent"],
     keywords=keywords,
     python_requires='>=3.6',
-    py_modules=['template_flask']
+    py_modules=['template_flask'],
+    include_package_data=True
 )

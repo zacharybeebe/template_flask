@@ -5,9 +5,6 @@ import subprocess
 import time
 from random import choice, randrange
 from template_flask.constants import *
-# from template_flask.bootstrap_templates import ALL_BS_TEMPLATES
-# from template_flask.bootstrap_css import ALL_BOOTSTRAP_CSS
-# from template_flask.bootstrap_js import ALL_BOOTSTRAP_JS
 
 
 def generate_random_secret_key():
@@ -27,20 +24,20 @@ def get_bootstrap_path():
             path = i
             break
     tf_path = os.path.join(path, 'template_flask')
-    final_path = os.path.join(tf_path, 'bootstrap')
+    final_path = os.path.abspath(os.path.join(tf_path, 'bootstrap'))
     return final_path
 
 
 def get_bs_templates_path(bs_path):
-    return os.path.join(bs_path, 'templates')
+    return os.path.abspath(os.path.join(bs_path, 'templates'))
 
 
 def get_bs_css_path(bs_path):
-    return os.path.join(bs_path, os.path.join('static', 'css'))
+    return os.path.abspath(os.path.join(bs_path, os.path.join('static', 'css')))
 
 
 def get_bs_js_path(bs_path):
-    return os.path.join(bs_path, os.path.join('static', 'js'))
+    return os.path.abspath(os.path.join(bs_path, os.path.join('static', 'js')))
 
 
 def copy_bootstrap(src_path, dest_path):
@@ -48,15 +45,12 @@ def copy_bootstrap(src_path, dest_path):
         for filename in walk[2]:
             iterables = []
             abs_path = os.path.abspath(os.path.join(src_path, filename))
-            print(abs_path)
             with open(os.path.abspath(os.path.join(src_path, filename)), 'r') as f:
                 for line in f.readlines():
                     fill = line.replace('\n', '')
                     iterables.append([f'''{fill}''', False])
 
             abs_path = os.path.abspath(os.path.join(dest_path, filename))
-            print(abs_path)
-            print()
             write_file(os.path.abspath(os.path.join(dest_path, filename)), iterables)
         break
 
@@ -143,11 +137,7 @@ def create_dir_and_venv(project_name: str, project_directory: str, test=False):
     write_file(run_main, RUN, fills=FILLS)
     write_file(init_main, INIT, fills=FILLS)
 
-    if test:
-        bootstrap_path = 'bootstrap'
-    else:
-        bootstrap_path = get_bootstrap_path()
-
+    bootstrap_path = get_bootstrap_path()
     bs_temp_path = get_bs_templates_path(bootstrap_path)
     bs_css_path = get_bs_css_path(bootstrap_path)
     bs_js_path = get_bs_js_path(bootstrap_path)
@@ -155,23 +145,6 @@ def create_dir_and_venv(project_name: str, project_directory: str, test=False):
     copy_bootstrap(bs_temp_path, templates_boot)
     copy_bootstrap(bs_css_path, css_boot)
     copy_bootstrap(bs_js_path, js_boot)
-
-
-
-    # for temp in ALL_BS_TEMPLATES:
-    #     iterables, file = temp
-    #     file_path = os.path.join(templates_boot, file)
-    #     write_file(file_path, iterables)
-    #
-    # for css in ALL_BOOTSTRAP_CSS:
-    #     iterables, file = css
-    #     file_path = os.path.join(css_boot, file)
-    #     write_file(file_path, iterables)
-    #
-    # for js in ALL_BOOTSTRAP_JS:
-    #     iterables, file = js
-    #     file_path = os.path.join(js_boot, file)
-    #     write_file(file_path, iterables)
 
 
 def activate_venv_and_install_reqs(project_name: str, project_directory: str):
@@ -191,7 +164,7 @@ def activate_venv_and_install_reqs(project_name: str, project_directory: str):
     print('Completed installing requirements into virtual environment\n')
     for req in reqs:
         print(req)
-        time.sleep(0.1)
+        time.sleep(0.05)
     print()
     print('Packages above have been automatically installed into virtual environment')
 
@@ -201,16 +174,6 @@ def activate_venv_and_install_reqs(project_name: str, project_directory: str):
 
     print('Completed writing initial "requirements.txt"\n')
 
-
-
-
-
-
-if __name__ == '__main__':
-    project_directory = 'C:/ZBEE490/DEV/other'
-    project_name = 'test2'
-
-    create_dir_and_venv(project_name, project_directory, test=True)
 
 
 
