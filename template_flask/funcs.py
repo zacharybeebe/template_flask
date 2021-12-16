@@ -1,5 +1,5 @@
 import os
-import sys
+import site
 import venv
 import subprocess
 import time
@@ -19,8 +19,8 @@ def generate_random_secret_key():
 
 def get_bootstrap_path():
     path = None
-    for i in sys.path:
-        if 'AppData' in i and i[-13:] == 'site-packages':
+    for i in site.getsitepackages():
+        if 'site-packages' in i:
             path = i
             break
     tf_path = os.path.join(path, 'template_flask')
@@ -177,7 +177,8 @@ def activate_venv_and_install_reqs(project_name: str, project_directory: str):
 
 
 
-
+if __name__ == '__main__':
+    get_bootstrap_path()
 
 
 
