@@ -1,8 +1,13 @@
 import os
+import sys
 import venv
 import subprocess
+import time
 from random import choice, randrange
 from template_flask.constants import *
+# from template_flask.bootstrap_templates import ALL_BS_TEMPLATES
+# from template_flask.bootstrap_css import ALL_BOOTSTRAP_CSS
+# from template_flask.bootstrap_js import ALL_BOOTSTRAP_JS
 
 
 def generate_random_secret_key():
@@ -15,11 +20,51 @@ def generate_random_secret_key():
     return key
 
 
+def get_bootstrap_path():
+    path = None
+    for i in sys.path:
+        if 'AppData' in i and i[-13:] == 'site-packages':
+            path = i
+            break
+    tf_path = os.path.join(path, 'template_flask')
+    final_path = os.path.join(tf_path, 'bootstrap')
+    return final_path
+
+
+def get_bs_templates_path(bs_path):
+    return os.path.join(bs_path, 'templates')
+
+
+def get_bs_css_path(bs_path):
+    return os.path.join(bs_path, os.path.join('static', 'css'))
+
+
+def get_bs_js_path(bs_path):
+    return os.path.join(bs_path, os.path.join('static', 'js'))
+
+
+def copy_bootstrap(src_path, dest_path):
+    for walk in os.walk(src_path):
+        for filename in walk[2]:
+            iterables = []
+            abs_path = os.path.abspath(os.path.join(src_path, filename))
+            print(abs_path)
+            with open(os.path.abspath(os.path.join(src_path, filename)), 'r') as f:
+                for line in f.readlines():
+                    fill = line.replace('\n', '')
+                    iterables.append([f'''{fill}''', False])
+
+            abs_path = os.path.abspath(os.path.join(dest_path, filename))
+            print(abs_path)
+            print()
+            write_file(os.path.abspath(os.path.join(dest_path, filename)), iterables)
+        break
+
+
 def write_file(file_path, iterable_lines, fills: dict={}):
     with open(file_path, 'w') as f:
-        for line_number in iterable_lines:
-            line_to_write = iterable_lines[line_number][0]
-            needs_fill = iterable_lines[line_number][1]
+        for line in iterable_lines:
+            line_to_write, needs_fill = line
 
             if needs_fill:
                 f.write(f'{line_to_write.format(**fills)}\n')
@@ -27,7 +72,7 @@ def write_file(file_path, iterable_lines, fills: dict={}):
                 f.write(f'{line_to_write}\n')
 
 
-def create_dir_and_venv(project_name: str, project_directory: str):
+def create_dir_and_venv(project_name: str, project_directory: str, test=False):
     FILLS = {
         'app': project_name,
         'secret_key': generate_random_secret_key(),
@@ -43,17 +88,25 @@ def create_dir_and_venv(project_name: str, project_directory: str):
     config_dir = os.path.join(package_path, 'config')
     models_dir = os.path.join(package_path, 'models')
     routes_dir = os.path.join(package_path, 'routes')
+
     static_dir = os.path.join(package_path, 'static')
+    css_dir = os.path.join(static_dir, 'css')
+    js_dir = os.path.join(static_dir, 'js')
+    css_boot = os.path.join(css_dir, 'bootstrap')
+    js_boot = os.path.join(js_dir, 'bootstrap')
     templates_dir = os.path.join(package_path, 'templates')
+    templates_boot = os.path.join(templates_dir, 'bootstrap')
 
     index_path = os.path.join(templates_dir, 'index.html')
 
     config_init = os.path.join(config_dir, '__init__.py')
     config_config = os.path.join(config_dir, 'app_config.py')
 
+    models_init_hint = os.path.join(models_dir, '_LOOK IN MODELS __INIT__.txt')
     models_init = os.path.join(models_dir, '__init__.py')
     models_db = os.path.join(models_dir, 'db.py')
-    models_model = os.path.join(models_dir, 'model.py')
+    models_model1 = os.path.join(models_dir, 'model1.py')
+    models_model2 = os.path.join(models_dir, 'model2.py')
 
     routes_init = os.path.join(routes_dir, '__init__.py')
     routes_routes = os.path.join(routes_dir, 'routes.py')
@@ -66,22 +119,59 @@ def create_dir_and_venv(project_name: str, project_directory: str):
     os.mkdir(models_dir)
     os.mkdir(routes_dir)
     os.mkdir(static_dir)
+    os.mkdir(css_dir)
+    os.mkdir(js_dir)
+    os.mkdir(css_boot)
+    os.mkdir(js_boot)
     os.mkdir(templates_dir)
+    os.mkdir(templates_boot)
 
     write_file(index_path, INDEX_HTML, fills=FILLS)
 
     write_file(config_init, CONFIG_INIT)
     write_file(config_config, CONFIG_CONFIG, fills=FILLS)
 
+    write_file(models_init_hint, MODEL_INIT_HINT)
     write_file(models_init, MODEL_INIT, fills=FILLS)
     write_file(models_db, MODEL_DB)
-    write_file(models_model, MODEL_MODEL, fills=FILLS)
+    write_file(models_model1, MODEL_MODEL1, fills=FILLS)
+    write_file(models_model2, MODEL_MODEL2, fills=FILLS)
 
     write_file(routes_init, ROUTE_INIT)
     write_file(routes_routes, ROUTE_ROUTE, fills=FILLS)
 
     write_file(run_main, RUN, fills=FILLS)
     write_file(init_main, INIT, fills=FILLS)
+
+    if test:
+        bootstrap_path = 'bootstrap'
+    else:
+        bootstrap_path = get_bootstrap_path()
+
+    bs_temp_path = get_bs_templates_path(bootstrap_path)
+    bs_css_path = get_bs_css_path(bootstrap_path)
+    bs_js_path = get_bs_js_path(bootstrap_path)
+
+    copy_bootstrap(bs_temp_path, templates_boot)
+    copy_bootstrap(bs_css_path, css_boot)
+    copy_bootstrap(bs_js_path, js_boot)
+
+
+
+    # for temp in ALL_BS_TEMPLATES:
+    #     iterables, file = temp
+    #     file_path = os.path.join(templates_boot, file)
+    #     write_file(file_path, iterables)
+    #
+    # for css in ALL_BOOTSTRAP_CSS:
+    #     iterables, file = css
+    #     file_path = os.path.join(css_boot, file)
+    #     write_file(file_path, iterables)
+    #
+    # for js in ALL_BOOTSTRAP_JS:
+    #     iterables, file = js
+    #     file_path = os.path.join(js_boot, file)
+    #     write_file(file_path, iterables)
 
 
 def activate_venv_and_install_reqs(project_name: str, project_directory: str):
@@ -101,6 +191,7 @@ def activate_venv_and_install_reqs(project_name: str, project_directory: str):
     print('Completed installing requirements into virtual environment\n')
     for req in reqs:
         print(req)
+        time.sleep(0.1)
     print()
     print('Packages above have been automatically installed into virtual environment')
 
@@ -115,7 +206,11 @@ def activate_venv_and_install_reqs(project_name: str, project_directory: str):
 
 
 
+if __name__ == '__main__':
+    project_directory = 'C:/ZBEE490/DEV/other'
+    project_name = 'test2'
 
+    create_dir_and_venv(project_name, project_directory, test=True)
 
 
 
