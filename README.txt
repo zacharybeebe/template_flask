@@ -44,6 +44,7 @@ WTForms
 Directory structure
 <your_app>
 --> <your_app>_app python module
+    --> __init__.py (flask app configuration and imports)
     --> config
         --> __init__.py
         --> app_config.py
@@ -69,7 +70,6 @@ Directory structure
         --> bootstrap
             --> * all bootstrap example html
         --> index.html
-    --> __init__.py (flask app configuration and imports)
 --> venv
 --> requirements.txt
 --> run.py (main flask app entry point)

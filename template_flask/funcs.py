@@ -86,6 +86,7 @@ def create_dir_and_venv(project_name: str, project_directory: str, test=False):
 
     static_dir = os.path.join(package_path, 'static')
     css_dir = os.path.join(static_dir, 'css')
+    img_dir = os.path.join(static_dir, 'img')
     js_dir = os.path.join(static_dir, 'js')
     css_boot = os.path.join(css_dir, 'bootstrap')
     js_boot = os.path.join(js_dir, 'bootstrap')
@@ -117,6 +118,7 @@ def create_dir_and_venv(project_name: str, project_directory: str, test=False):
     os.mkdir(routes_dir)
     os.mkdir(static_dir)
     os.mkdir(css_dir)
+    os.mkdir(img_dir)
     os.mkdir(js_dir)
     os.mkdir(css_boot)
     os.mkdir(js_boot)
