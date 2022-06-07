@@ -4,7 +4,7 @@ import venv
 import subprocess
 import time
 from random import choice, randrange
-from constants import *
+from template_flask.constants import *
 
 
 def generate_random_secret_key():
