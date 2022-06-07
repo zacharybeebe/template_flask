@@ -1,6 +1,7 @@
 import os
 from time import sleep
-from template_flask.funcs import create_dir_and_venv, activate_venv_and_install_reqs
+#from template_flask.funcs import create_dir_and_venv, activate_venv_and_install_reqs
+from funcs import create_dir_and_venv, activate_venv_and_install_reqs
 
 
 if __name__ == '__main__':

@@ -4,7 +4,8 @@ import venv
 import subprocess
 import time
 from random import choice, randrange
-from template_flask.constants import *
+#from template_flask.constants import *
+from constants import *
 
 
 def generate_random_secret_key():
@@ -88,6 +89,7 @@ def create_dir_and_venv(project_name: str, project_directory: str, test=False):
     js_dir = os.path.join(static_dir, 'js')
     css_boot = os.path.join(css_dir, 'bootstrap')
     js_boot = os.path.join(js_dir, 'bootstrap')
+    js_fetcher = os.path.join(js_dir, 'fetcher.js')
 
     templates_dir = os.path.join(package_path, 'templates')
     templates_boot = os.path.join(templates_dir, 'bootstrap')
@@ -125,6 +127,8 @@ def create_dir_and_venv(project_name: str, project_directory: str, test=False):
 
     write_file(config_init, CONFIG_INIT)
     write_file(config_config, CONFIG_CONFIG, fills=FILLS)
+
+    write_file(js_fetcher, JS_FETCHER)
 
     write_file(models_init_hint, MODEL_INIT_HINT)
     write_file(models_init, MODEL_INIT, fills=FILLS)

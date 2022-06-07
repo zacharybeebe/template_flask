@@ -19,7 +19,8 @@ INDEX_HTML = [
     ['</head>', False],
     ['<body>', False],
     ['\t<h1>Welcome to your new project: {app}</h1>', True],
-    ['\t<p><h3>Checkout the Bootstrap Templates below to add to your project</h3></p>', False],
+    ['''\t<p><button onclick="Fetcher.fetcher('fetcher', {hello: 'world'});">Click here for asynchronous post</button></p>''', False],
+    ['\t<p><h3>Check out the Bootstrap Templates below to add to your project</h3></p>', False],
     ['\t<p><label>The HTML, CSS AND JS for these are located in the TEMPLATES AND STATIC folders</label></p> ', False],
     ['''\t<p><a href="{{ url_for('bootstrap', bs_page='album') }}"><b>Album</b></a></p>''', False],
     ['''\t<p><a href="{{ url_for('bootstrap', bs_page='blog') }}"><b>Blog</b></a></p>''', False],
@@ -44,6 +45,7 @@ INDEX_HTML = [
     ['''\t<p><a href="{{ url_for('bootstrap', bs_page='starter_template') }}"><b>Starter Template</b></a></p>''', False],
     ['''\t<p><a href="{{ url_for('bootstrap', bs_page='sticky_footer') }}"><b>Sticky Footer</b></a></p>''', False],
     ['''\t<p><a href="{{ url_for('bootstrap', bs_page='sticky_footer_navbar') }}"><b>Sticky Footer Navbar</b></a></p>''', False],
+    ['''\t<script src="{{ url_for('static', filename='js/fetcher.js') }}"></script>''', False],
     ['</body>', False],
     ['</html>', False]
 ]
@@ -65,7 +67,7 @@ MODEL_INIT_HINT = [
 ]
 
 MODEL_INIT = [
-    ["# Import all Flask-SQLAlchemy Models and Tables to here and then the main __init__.py will import * (all) from here", False],
+    ["# Import all Flask-SQLAlchemy Models to here and then the main __init__.py will import * (all) from here", False],
     ["", False],
     ["", False],
     ["from {app}_app.models.db import db", True],
@@ -165,8 +167,8 @@ ROUTE_INIT = [
 ]
 
 ROUTE_ROUTE = [
-    ["from flask import render_template, redirect, url_for, request, session, flash", False],
-    ["from {app}_app import app, db, Model1, Model2", True],
+    ["from flask import render_template, redirect, url_for, request, session, flash, jsonify, make_response", False],
+    ["from {app}_app import app, db, User, OtherModel", True],
     ["", False],
     ["", False],
     ["@app.route('/', methods=['POST', 'GET'])", False],
@@ -181,15 +183,25 @@ ROUTE_ROUTE = [
     ["@app.route('/bootstrap_<bs_page>')", False],
     ["def bootstrap(bs_page):", False],
     ["\treturn render_template(f'bootstrap/{bs_page}.html')", False],
+    ["", False],
+    ["", False],
+    ["# Asynchronous route using the Fetcher Object in static/js/fetcher.js", False],
+    ["# Customize this object for use in your application", False],
+    ["@app.route('/fetcher', methods=['POST'])", False],
+    ["def fetcher():", False],
+    ["\tpost = request.get_json()", False],
+    ["\tprint('fetcher post = ', post)", False],
+    ["\tresponse = make_response(jsonify({'message': 'good response', 'data': {'hello': True, 'world': [1, 2, 3]}}), 200)", False],
+    ["\treturn response", False]
 ]
 
 
 RUN = [
-    ["from {app}_app import app", True],
+    ["from {app}_app import app, DEBUG", True],
     ["", False],
     ["", False],
     ["if __name__ == '__main__':", False],
-    ["\tapp.run(debug=True)", False]
+    ["\tapp.run(debug=DEBUG)", False]
 ]
 
 INIT = [
@@ -222,6 +234,9 @@ INIT = [
     ["# app.config[''] = ''", False],
     ["# app.config[''] = ''", False],
     ["", False],
+    ["# Use this bool to control your app debug state, run.py will import this", False],
+    ["DEBUG = True", False],
+    ["", False],
     ["", False],
     ["with app.app_context():", False],
     ["\tdb.init_app(app)", False],
@@ -231,3 +246,76 @@ INIT = [
     ["from {app}_app.routes import routes", True]
 ]
 
+JS_FETCHER = [
+    ["// Global Instance of Fetcher", False],
+    ["// This object can send asynchronous requests to your Flask routes", False],
+    ["// Main use - Fetcher.fetcher(route_url_endpoint, data to be posted, method (default is POST))", False],
+    ["", False],
+    ["(function (global) {", False],
+    ['\t"use strict";', False],
+    ["\tlet lastFetch = {};", False],
+    ["\tlet lastFetchEndpoint = null;", False],
+    ["\tlet lastFetchUrl = null;", False],
+    ["\tlet lastFetchBody = null;", False],
+    ["\tlet lastFetchMethod = null;", False],
+    ["", False],
+    ["\tlet fetcher = function(url_endpoint, body, method='POST'){", False],
+    ["\t\t// Update last fetch properties", False],
+    ["\t\tlastFetchEndpoint = url_endpoint;", False],
+    ["\t\tlastFetchUrl = `${window.origin}/${url_endpoint}`;", False],
+    ["\t\tlastFetchBody = body;", False],
+    ["\t\tlastFetchMethod = method;", False],
+    ["\t\tlastFetch = {", False],
+    ["\t\t\torigin: window.origin,", False],
+    ["\t\t\tendpoint: lastFetchEndpoint,", False],
+    ["\t\t\turl: lastFetchUrl,", False],
+    ["\t\t\tbody: lastFetchBody,", False],
+    ["\t\t\tmethod: lastFetchMethod", False],
+    ["\t\t};", False],
+    ["", False],
+    ["\t\t// Start fetching process to Flask route", False],
+    ["\t\tfetch(lastFetchUrl, {", False],
+    ["\t\t\tmethod: lastFetchMethod,", False],
+    ["\t\t\tcredentials: 'include',", False],
+    ["\t\t\tbody: JSON.stringify(lastFetchBody),", False],
+    ["\t\t\tcache: 'no-cache',", False],
+    ["\t\t\theaders: new Headers({", False],
+    ["\t\t\t\t'content-type': 'application/json'", False],
+    ["\t\t\t})", False],
+    ["\t\t})", False],
+    ["\t\t.then(function(response) {", False],
+    ["\t\t\t// You can customize .then function as needed", False],
+    ["\t\t\tif (response.status !== 200) {", False],
+    ["\t\t\t\talert(`Response was not 200: ${response.status} - at ${lastFetchUrl}`);", False],
+    ["\t\t\t} else {", False],
+    ["\t\t\t\tresponse.json().then(function(data){", False],
+    ["\t\t\t\t\t// data from flask.make_response", False],
+    ["\t\t\t\t\tlet alert_text = `A javascript object called Fetcher (located at static/js/fetcher.js) can be called to make asynchronous posts to your Flask app you can edit this object to suit the needs of your app\\n\\ndata sent: ${JSON.stringify(lastFetch)}\\n\\ndata received: ${JSON.stringify(data)}`;", False],
+    ["\t\t\t\t\talert(alert_text);", False],
+    ["\t\t\t\t\tconsole.log('data sent: ', lastFetch);", False],
+    ["\t\t\t\t\tconsole.log('data received: ', data);", False],
+    ["\t\t\t\t\treturn;", False],
+    ["\t\t\t\t})", False],
+    ["\t\t\t}", False],
+    ["\t\t})", False],
+    ["\t};", False],
+    ["", False],
+    ["", False],
+    ["\tlet Fetcher = function(){};", False],
+    ["\tObject.assign(Fetcher.prototype, {", False],
+    ["\t\tlastFetch: lastFetch,", False],
+    ["\t\tlastFetchEndpoint: lastFetchEndpoint,", False],
+    ["\t\tlastFetchUrl: lastFetchUrl,", False],
+    ["\t\tlastFetchBody: lastFetchBody,", False],
+    ["\t\tlastFetchMethod: lastFetchMethod,", False],
+    ["", False],
+    ["\t\tfetcher: function(url_endpoint, body, method='POST'){", False],
+    ["\t\t\tfetcher(url_endpoint, body, method);", False],
+    ["\t\t}", False],
+    ["\t});", False],
+    ["", False],
+    ["\tglobal.Fetcher = new Fetcher;", False],
+    ["", False],
+    ["})(this);", False],
+    ["", False]
+]
