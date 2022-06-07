@@ -41,6 +41,40 @@ Werkzeug
 WTForms
 
 
+Directory structure
+<your_app>
+--> <your_app>_app python module
+    --> config
+        --> __init__.py
+        --> app_config.py
+    --> models
+        --> __init__.py
+        --> datatypes.py
+        --> db.py
+        --> other_model.py
+        --> user.py
+    --> routes
+        --> __init__.py
+        --> routes.py
+    --> static
+        --> css
+            --> bootstrap
+                --> * all bootstrap example css
+        --> img
+        --> js
+            --> bootstrap
+                --> * all bootstrap example js
+            fetcher.js
+    --> templates
+        --> bootstrap
+            --> * all bootstrap example html
+        --> index.html
+    --> __init__.py (flask app configuration and imports)
+--> venv
+--> requirements.txt
+--> run.py (main flask app entry point)
+
+
 Within the templates and static folders that are created, you will find HTML, CSS, and JS for various Bootstrap 5 example
 if you would like to use them in your project.
 
