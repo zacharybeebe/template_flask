@@ -51,7 +51,7 @@ def copy_bootstrap(src_path, dest_path):
                     iterables.append([f'''{fill}''', False])
 
             abs_path = os.path.abspath(os.path.join(dest_path, filename))
-            write_file(os.path.abspath(os.path.join(dest_path, filename)), iterables)
+            write_file(abs_path, iterables)
         break
 
 
@@ -88,9 +88,9 @@ def create_dir_and_venv(project_name: str, project_directory: str, test=False):
     js_dir = os.path.join(static_dir, 'js')
     css_boot = os.path.join(css_dir, 'bootstrap')
     js_boot = os.path.join(js_dir, 'bootstrap')
+
     templates_dir = os.path.join(package_path, 'templates')
     templates_boot = os.path.join(templates_dir, 'bootstrap')
-
     index_path = os.path.join(templates_dir, 'index.html')
 
     config_init = os.path.join(config_dir, '__init__.py')
@@ -99,13 +99,14 @@ def create_dir_and_venv(project_name: str, project_directory: str, test=False):
     models_init_hint = os.path.join(models_dir, '_LOOK IN MODELS __INIT__.txt')
     models_init = os.path.join(models_dir, '__init__.py')
     models_db = os.path.join(models_dir, 'db.py')
-    models_model1 = os.path.join(models_dir, 'model1.py')
-    models_model2 = os.path.join(models_dir, 'model2.py')
+    models_datatypes = os.path.join(models_dir, 'datatypes.py')
+    models_user = os.path.join(models_dir, 'user.py')
+    models_other_model = os.path.join(models_dir, 'other_model.py')
 
     routes_init = os.path.join(routes_dir, '__init__.py')
     routes_routes = os.path.join(routes_dir, 'routes.py')
 
-    run_main = os.path.join(package_path, 'run.py')
+    run_main = os.path.join(full_path, 'run.py')
     init_main = os.path.join(package_path, '__init__.py')
 
     os.mkdir(package_path)
@@ -128,8 +129,9 @@ def create_dir_and_venv(project_name: str, project_directory: str, test=False):
     write_file(models_init_hint, MODEL_INIT_HINT)
     write_file(models_init, MODEL_INIT, fills=FILLS)
     write_file(models_db, MODEL_DB)
-    write_file(models_model1, MODEL_MODEL1, fills=FILLS)
-    write_file(models_model2, MODEL_MODEL2, fills=FILLS)
+    write_file(models_datatypes, MODEL_DATATYPES)
+    write_file(models_user, MODEL_USER, fills=FILLS)
+    write_file(models_other_model, MODEL_OTHER_MODEL, fills=FILLS)
 
     write_file(routes_init, ROUTE_INIT)
     write_file(routes_routes, ROUTE_ROUTE, fills=FILLS)
@@ -178,7 +180,7 @@ def activate_venv_and_install_reqs(project_name: str, project_directory: str):
 
 
 if __name__ == '__main__':
-    get_bootstrap_path()
+    print(get_bootstrap_path())
 
 
 

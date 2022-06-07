@@ -5,6 +5,7 @@ REQUIREMENTS = [
     'flask_mail',
     'flask_wtf',
     'flask_debugtoolbar',
+    'gunicorn',
     'pytest',
     'pytest_cov'
 ]
@@ -64,54 +65,104 @@ MODEL_INIT_HINT = [
 ]
 
 MODEL_INIT = [
-    ["# IMPORT ALL MODELS AND DB TO HERE AND THEN THE MAIN __INIT__.PY WILL", False],
-    ["# IMPORT * FROM HERE", False],
+    ["# Import all Flask-SQLAlchemy Models and Tables to here and then the main __init__.py will import * (all) from here", False],
     ["", False],
     ["", False],
     ["from {app}_app.models.db import db", True],
-    ["from {app}_app.models.model1 import Model1", True],
-    ["from {app}_app.models.model2 import Model2", True]
+    ["from {app}_app.models.user import User", True],
+    ["from {app}_app.models.other_model import OtherModel", True]
 ]
 
 MODEL_DB = [
+    ["from datetime import datetime", False],
     ["from flask_sqlalchemy import SQLAlchemy", False],
+    ["from sqlalchemy.ext.hybrid import hybrid_property", False],
     ["", False],
     ["", False],
-    ["# SHARED DATABASE FOR MODELS IN SEPARATE .PY FILES.", False],
-    ["# MODELS.__INIT__.PY IMPORTS DB (AS WELL AS OTHER MODELS) AND", False],
-    ["# THEN THE MAIN __INIT__.PY FOR THE APP WILL IMPORT * FROM MODELS.__INIT__.PY.", False],
+    ["# Shared Database (db) for models and tables in seperated .py files.", False],
+    ["# models.__init__.py imports db and other Flask-SQLAlchemy Models and", False],
+    ["# then the main __init__.py for the app will import * (all) from app.models.", False],
     ["", False],
     ["", False],
     ["db = SQLAlchemy()", False]
 ]
 
-MODEL_MODEL1 = [
-    ["from datetime import datetime", False],
-    ["from {app}_app.models.db import db", True],
+MODEL_DATATYPES = [
+    ["from hashlib import sha256", False],
+    ["from sqlalchemy.types import TypeDecorator, String", False],
     ["", False],
     ["", False],
-    ["# CREATE CUSTOM MODEL HERE", False],
-    ["# IF CREATING MORE MODELS IN SEPARATE .PY FILES GO TO MODELS.__INIT__.PY AND IMPORT THE NEW MODEL", False],
-    ["# THE MAIN __INIT__.PY FOR THE APP WILL IMPORT * FROM MODELS.__INIT__.PY", False],
+    ["# Here you can create custom Column Datatypes for Flask-SQLAlchemy Models", False],
     ["", False],
     ["", False],
-    ["class Model1(db.Model):", False],
-    ["\tid = db.Column(db.Integer, primary_key=True)", False]
+    ["class Name(TypeDecorator):", False],
+    ["\timpl = String(128)  # The implied class type from SQLAlchemy", False],
+    ["", False],
+    ["\tdef process_bind_param(self, value, dialect):", False],
+    ["\t\t#This method will process the value upon creation and can transform it before inserting into database", False],
+    ["", False],
+    ["\t\treturn value.lower().capitalize()", False],
+    ["", False],
+    ["\tdef process_result_value(self, value, dialect):", False],
+    ["\t\t#This method will process the value upon loading and can transform it before the Model attribute is set", False],
+    ["", False],
+    ["\t\treturn value", False],
+    ["", False],
+    ["", False],
+    ["class Password(TypeDecorator):", False],
+    ["\timpl = String(64)  # The implied class type from SQLAlchemy", False],
+    ["", False],
+    ["\tdef process_bind_param(self, value, dialect):", False],
+    ["\t\t#This method will process the value upon creation and can transform it before inserting into database", False],
+    ["", False],
+    ["\t\treturn sha256(value.encode('utf-8')).hexdigest()", False],
+    ["", False],
+    ["\tdef process_result_value(self, value, dialect):", False],
+    ["\t\t#This method will process the value upon loading and can transform it before the Model attribute is set", False],
+    ["", False],
+    ["\t\treturn value", False]
 ]
 
-MODEL_MODEL2 = [
-    ["from datetime import datetime", False],
-    ["from {app}_app.models.db import db", True],
+MODEL_USER = [
+    ["from {app}_app.models.db import db, datetime, hybrid_property", True],
+    ["from {app}_app.models.datatypes import Name, Password", True],
     ["", False],
     ["", False],
-    ["# CREATE CUSTOM MODEL HERE", False],
-    ["# IF CREATING MORE MODELS IN SEPARATE .PY FILES GO TO MODELS.__INIT__.PY AND IMPORT THE NEW MODEL", False],
-    ["# THE MAIN __INIT__.PY FOR THE APP WILL IMPORT * FROM MODELS.__INIT__.PY", False],
+    ["# Example User Model", False],
+    ["# When creating more Models in separate python files, go to <app>.models.__init__.py and import the new model to there.", False],
+    ["# The main __init__.py for the app will import * (all) from <app>.models.__init__.py ", False],
     ["", False],
     ["", False],
-    ["class Model2(db.Model):", False],
-    ["\tid = db.Column(db.Integer, primary_key=True)", False]
+    ["class User(db.Model):", False],
+    ["\tid = db.Column(db.Integer, primary_key=True)", False],
+    ["\tdate_created = db.Column(db.Datetime, nullable=False, default=datetime.now())", False],
+    ["\tfirst_name = db.Column(Name)  # From datatypes.py - Custom datatype which will capitalize the name upon creation", False],
+    ["\tlast_name = db.Column(Name)  # From datatypes.py - Custom datatype which will capitalize the name upon creation", False],
+    ["\temail = db.Column(db.String(128))", False],
+    ["\tusername = db.Column(db.String(64), unique=True)", False],
+    ["\tpassword = db.Column(Password)  # From datatypes.py - Custom datatype which will convert password to sha256 hexdigest", False],
+    ["", False],
+    ["\t@hybrid_property", False],
+    ["\tdef full_name(self):", False],
+    ["\t\treturn f'{self.first_name} {self.last_name}'", False]
 ]
+
+MODEL_OTHER_MODEL = [
+    ["from datetime import datetime", False],
+    ["from {app}_app.models.db import db, datetime", True],
+    ["", False],
+    ["", False],
+    ["# Other Example Model", False],
+    ["# When creating more Models in separate python files, go to <app>.models.__init__.py and import the new model to there.", False],
+    ["# The main __init__.py for the app will import * (all) from <app>.models.__init__.py ", False],
+    ["", False],
+    ["", False],
+    ["class OtherModel(db.Model):", False],
+    ["\t__tablename__ = 'other_model'", False],
+    ["\tid = db.Column(db.Integer, primary_key=True)", False],
+    ["\tdate_created = db.Column(db.Datetime, nullable=False, default=datetime.now())", False]
+]
+
 
 ROUTE_INIT = [
     ["", False]
@@ -157,10 +208,21 @@ INIT = [
     ["", False],
     ["app = Flask(__name__)", False],
     ["app.config['SECRET_KEY'] = SECRET_KEY", False],
+    ["", False],
+    ["# SQLAlchemy Config", False],
     ["app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI", False],
     ["app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False", False],
-    ["# app.config[''] = ''", False],
-    ["# app.config[''] = ''", False],
+    ["", False],
+    ["# Flask Mail Config", False],
+    ["# app.config['MAIL_SERVER'] = ''\t# Your Mail Server (ex. 'smtp.zoho.com')", False],
+    ["# app.config['MAIL_PORT'] = ''\t# Your Mail Port (ex. 465)", False],
+    ["# app.config['MAIL_USE_SSL'] = ''\t# Using SSL? (True/False)", False],
+    ["# app.config['MAIL_USE_TLS'] = ''\t# Using TLS? (True/False)", False],
+    ["# app.config['MAIL_USERNAME'] = ''\t# Your Mail Email Address (ex. 'admin@yourcompany.com')", False],
+    ["# app.config['MAIL_PASSWORD'] = ''\t# Your Mail Password", False],
+    ["# app.config['MAIL_DEFAULT_SENDER'] = ''\t# Your Mail Default Sender (ex. 'admin@yourcompany.com')", False],
+    ["", False],
+    ["# Other Config", False],
     ["# app.config[''] = ''", False],
     ["# app.config[''] = ''", False],
     ["", False],

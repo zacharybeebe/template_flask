@@ -24,6 +24,7 @@ Flask-Mail
 Flask-SQLAlchemy
 Flask-WTF
 greenlet
+gunicorn
 importlib-metadata
 iniconfig
 itsdangerous
