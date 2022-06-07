@@ -25,7 +25,6 @@ Flask-SQLAlchemy
 Flask-WTF
 greenlet
 gunicorn
-importlib-metadata
 iniconfig
 itsdangerous
 Jinja2
@@ -37,17 +36,16 @@ pyparsing
 pytest
 pytest-cov
 SQLAlchemy
-toml
-typing-extensions
+tomli
 Werkzeug
 WTForms
-zipp
 
 
 Within the templates and static folders that are created, you will find HTML, CSS, and JS for various Bootstrap 5 example
 if you would like to use them in your project.
 
-To preview the live Bootstrap pages, run the newly created "run.py" file from within your new project directory, open to
+To preview the live Bootstrap pages, activate your newly created virtual environment and
+run the newly created "run.py" file from within your new project directory, open to
 the index page and click through the buttons.
 
 
