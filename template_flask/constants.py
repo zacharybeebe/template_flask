@@ -100,12 +100,10 @@ MODEL_DATATYPES = [
     ["", False],
     ["\tdef process_bind_param(self, value, dialect):", False],
     ["\t\t#This method will process the value upon creation and can transform it before inserting into database", False],
-    ["", False],
     ["\t\treturn value.lower().capitalize()", False],
     ["", False],
     ["\tdef process_result_value(self, value, dialect):", False],
     ["\t\t#This method will process the value upon loading and can transform it before the Model attribute is set", False],
-    ["", False],
     ["\t\treturn value", False],
     ["", False],
     ["", False],
@@ -114,12 +112,10 @@ MODEL_DATATYPES = [
     ["", False],
     ["\tdef process_bind_param(self, value, dialect):", False],
     ["\t\t#This method will process the value upon creation and can transform it before inserting into database", False],
-    ["", False],
     ["\t\treturn sha256(value.encode('utf-8')).hexdigest()", False],
     ["", False],
     ["\tdef process_result_value(self, value, dialect):", False],
     ["\t\t#This method will process the value upon loading and can transform it before the Model attribute is set", False],
-    ["", False],
     ["\t\treturn value", False]
 ]
 
@@ -135,7 +131,7 @@ MODEL_USER = [
     ["", False],
     ["class User(db.Model):", False],
     ["\tid = db.Column(db.Integer, primary_key=True)", False],
-    ["\tdate_created = db.Column(db.Datetime, nullable=False, default=datetime.now())", False],
+    ["\tdate_created = db.Column(db.DateTime, nullable=False, default=datetime.now())", False],
     ["\tfirst_name = db.Column(Name)  # From datatypes.py - Custom datatype which will capitalize the name upon creation", False],
     ["\tlast_name = db.Column(Name)  # From datatypes.py - Custom datatype which will capitalize the name upon creation", False],
     ["\temail = db.Column(db.String(128))", False],
@@ -160,7 +156,7 @@ MODEL_OTHER_MODEL = [
     ["class OtherModel(db.Model):", False],
     ["\t__tablename__ = 'other_model'", False],
     ["\tid = db.Column(db.Integer, primary_key=True)", False],
-    ["\tdate_created = db.Column(db.Datetime, nullable=False, default=datetime.now())", False]
+    ["\tdate_created = db.Column(db.DateTime, nullable=False, default=datetime.now())", False]
 ]
 
 
