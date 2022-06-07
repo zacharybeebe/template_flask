@@ -4,7 +4,7 @@ import venv
 import subprocess
 import time
 from random import choice, randrange
-from template_flask.constants import *
+from .constants import *
 
 
 def generate_random_secret_key():
@@ -17,42 +17,23 @@ def generate_random_secret_key():
     return key
 
 
-def get_bootstrap_path():
-    path = None
-    for i in site.getsitepackages():
-        if 'site-packages' in i:
-            path = i
-            break
-    tf_path = os.path.join(path, 'template_flask')
-    final_path = os.path.abspath(os.path.join(tf_path, 'bootstrap'))
-    return final_path
+def copy_bootstrap(dest_path, bs_type):
+    if bs_type in ['css', 'js']:
+        end_path = os.path.join(os.path.join('bootstrap', 'static'), bs_type)
+    else:
+        end_path = os.path.join('bootstrap', bs_type)
+    src_path = os.path.join(os.path.dirname(__file__), end_path)
 
+    for filename in os.listdir(src_path):
+        iterables = []
+        src_file = os.path.join(src_path, filename)
+        with open(src_file, 'r') as f:
+            for line in f.readlines():
+                fill = line.replace('\n', '')
+                iterables.append([f'''{fill}''', False])
 
-def get_bs_templates_path(bs_path):
-    return os.path.abspath(os.path.join(bs_path, 'templates'))
-
-
-def get_bs_css_path(bs_path):
-    return os.path.abspath(os.path.join(bs_path, os.path.join('static', 'css')))
-
-
-def get_bs_js_path(bs_path):
-    return os.path.abspath(os.path.join(bs_path, os.path.join('static', 'js')))
-
-
-def copy_bootstrap(src_path, dest_path):
-    for walk in os.walk(src_path):
-        for filename in walk[2]:
-            iterables = []
-            abs_path = os.path.abspath(os.path.join(src_path, filename))
-            with open(os.path.abspath(os.path.join(src_path, filename)), 'r') as f:
-                for line in f.readlines():
-                    fill = line.replace('\n', '')
-                    iterables.append([f'''{fill}''', False])
-
-            abs_path = os.path.abspath(os.path.join(dest_path, filename))
-            write_file(abs_path, iterables)
-        break
+        dest_file = os.path.abspath(os.path.join(dest_path, filename))
+        write_file(dest_file, iterables)
 
 
 def write_file(file_path, iterable_lines, fills: dict={}):
@@ -66,14 +47,11 @@ def write_file(file_path, iterable_lines, fills: dict={}):
                 f.write(f'{line_to_write}\n')
 
 
-def create_dir_and_venv(project_name: str, project_directory: str, test=False):
+def create_dir_and_venv(project_name: str, full_path: str):
     FILLS = {
         'app': project_name,
         'secret_key': generate_random_secret_key(),
     }
-
-    full_path = os.path.join(project_directory, project_name)
-    os.mkdir(full_path)
 
     venv_path = os.path.join(full_path, 'venv')
     venv.create(venv_path, with_pip=True)
@@ -144,18 +122,12 @@ def create_dir_and_venv(project_name: str, project_directory: str, test=False):
     write_file(run_main, RUN, fills=FILLS)
     write_file(init_main, INIT, fills=FILLS)
 
-    bootstrap_path = get_bootstrap_path()
-    bs_temp_path = get_bs_templates_path(bootstrap_path)
-    bs_css_path = get_bs_css_path(bootstrap_path)
-    bs_js_path = get_bs_js_path(bootstrap_path)
-
-    copy_bootstrap(bs_temp_path, templates_boot)
-    copy_bootstrap(bs_css_path, css_boot)
-    copy_bootstrap(bs_js_path, js_boot)
+    copy_bootstrap(templates_boot, 'templates')
+    copy_bootstrap(css_boot, 'css')
+    copy_bootstrap(js_boot, 'js')
 
 
-def activate_venv_and_install_reqs(project_name: str, project_directory: str):
-    full_path = os.path.join(project_directory, project_name)
+def activate_venv_and_install_reqs(project_name: str, full_path: str):
     reqs_path = os.path.join(full_path, 'requirements.txt')
     venv_path = os.path.join(full_path, os.path.join('venv', 'Scripts'))
 
@@ -180,6 +152,7 @@ def activate_venv_and_install_reqs(project_name: str, project_directory: str):
             f.write(f"""{req}\n""")
 
     print('Completed writing initial "requirements.txt"\n')
+    print(DIRECTORY_STRUCTURE.format(app=project_name))
 
 
 
