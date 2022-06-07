@@ -1,2 +1,2 @@
-global-include *.txt *.py *.html *.css *.js
+global-include *.txt *.py *.html *.css *.js *.map
 graft bootstrap
