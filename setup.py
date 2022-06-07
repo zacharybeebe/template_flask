@@ -8,7 +8,7 @@ with open("README.txt", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='template_flask',
-    version="2.0",
+    version="2.1",
     author='Zach Beebe',
     author_email='z.beebe@yahoo.com',
     description='Python module for creating a template flask app structure and virtual environment, along with Bootstrap examples',
