@@ -4,7 +4,6 @@ import venv
 import subprocess
 import time
 from random import choice, randrange
-#from template_flask.constants import *
 from constants import *
 
 
