@@ -261,6 +261,7 @@ INIT = [
     ["# from flask_mail import ()", False],
     ["# from flask_wft import ()", False],
     ["# from flask_debugtoolbar import ()", False],
+    ["from datetime import timedelta", False],
     ["", False],
     ["from .config.config import *", False],
     ["from .models import *", False],
