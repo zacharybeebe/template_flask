@@ -1,4 +1,18 @@
+# Clean dist folder prior to new sdist and bdist_wheel
+import os
 import setuptools
+
+dist = os.path.join(os.path.dirname(__file__), 'dist')
+dist_archive = os.path.join(os.path.dirname(__file__), 'dist_archive')
+for file in os.listdir(dist):
+    current = os.path.join(dist, file)
+    with open(current, mode='rb') as f:
+        contents = f.read()
+    with open(os.path.join(dist_archive, file), mode='wb') as f:
+        f.write(contents)
+    os.remove(current)
+##################################################################################
+
 
 keywords = ['flask', 'directory structure', 'cookie cutter'
             'venv', 'bootstrap']
@@ -8,7 +22,7 @@ with open("README.txt", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='template_flask',
-    version="3.1",
+    version="3.2",
     author='Zach Beebe',
     author_email='z.beebe@yahoo.com',
     description='Python module for creating a template flask app structure and virtual environment, along with Bootstrap examples',
