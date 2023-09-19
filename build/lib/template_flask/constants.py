@@ -247,7 +247,7 @@ RUN = [
     ["if __name__ == '__main__':", False],
     ["\tif app.debug:", False],
     ["\t\tHOST = None  # Flask will use defaults", False],
-    ["\t\tPORT = None:", False],
+    ["\t\tPORT = None", False],
     ["\telse:", False],
     ["\t\tHOST = 'local_host'", False],
     ["\t\tPORT = 5001", False],

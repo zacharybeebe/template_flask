@@ -140,11 +140,11 @@ def activate_venv_and_install_reqs(project_name: str, full_path: str):
     venv_path = os.path.join(full_path, os.path.join('venv', 'Scripts'))
 
     os.chdir(venv_path)
-    cmd = f'"{sys.executable}" -m pip install {" ".join(REQUIREMENTS)}'
+    cmd = f'python -m pip install {" ".join(REQUIREMENTS)}'
     subprocess.run(cmd, shell=True)
     print()
 
-    cmd = f'"{sys.executable}" -m pip freeze'
+    cmd = f'python -m pip freeze'
     reqs = [x.decode('utf-8').split('==')[0]
             for x in subprocess.run(cmd, check=True, stdout=subprocess.PIPE, shell=True).stdout.splitlines()]
 
@@ -161,6 +161,7 @@ def activate_venv_and_install_reqs(project_name: str, full_path: str):
 
     print('Completed writing initial "requirements.txt"\n')
     print(DIRECTORY_STRUCTURE.format(app=project_name))
+    os.chdir(os.getcwd())
 
 
 
