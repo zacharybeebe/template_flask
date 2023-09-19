@@ -50,7 +50,7 @@ Directory structure
 
     --> config
         --> __init__.py
-        --> app_config.py
+        --> config.py
 
     --> models
         --> __init__.py
@@ -80,7 +80,9 @@ Directory structure
 
 --> venv
 --> requirements.txt
---> run.py (main flask app entry point)
+--> wsgi.py (main flask app entry point)
+--> Dockerfile
+--> .dockerignore
 
 
 Within the templates and static folders that are created, you will find HTML, CSS, and JS for various Bootstrap 5 example
